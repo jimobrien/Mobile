@@ -15,7 +15,7 @@
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="cordova.js"></script>
     
-    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/easing/EasePack.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/easing/EasePack.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/TweenLite.min.js"></script>
     <script src="lib/Chart.js/Chart.js"></script>
     <script src="lib/ng-chartjs/dist/angular-chartjs.js"></script>
@@ -29,11 +29,19 @@
       }
       a {
         text-decoration: none;
+        color: #148EFF;
+        font-weight: bold;
       }
 
       /* splash page */
       .splash {
-        background: #3B6BD9;
+        /*background: #3B6BD9;*/
+        background: radial-gradient(circle at 2.01% 98.00%, #F09819, transparent 100%),radial-gradient(circle at 97.99% 29.05%, #EDDE5D, transparent 100%),radial-gradient(circle at 50% 50%, #61f1f4, #61f1f4 100%);
+      }
+
+      /* general */
+      .tabs-background-orange > .tabs{
+        background: #F09819 !important;
       }
       .splash img {
         position: absolute;
@@ -50,7 +58,7 @@
         width: 200px;
         color: #fff;
         opacity: 0.85;
-        font-size: 14px;
+        font-size: 13px;
         margin: 0 50%;
       }
       .disclaimer h4 {

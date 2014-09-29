@@ -20,49 +20,31 @@ angular.module('cmm', [
     }
   });
 })
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider) {  
   $stateProvider
     .state('splash', {
       url: '/splash',
       templateUrl: 'splash.html',
       controller: 'SplashCtrl'
     })
-    .state('main', {
-      url: '/main',
-      templateUrl: 'main.html',
+    .state('pulse', {
+      url: '/pulse',
+      templateUrl: 'pulse.html',
       controller: 'MainCtrl'
+    })
+    .state('tape', {
+      url: '/tape',
+      templateUrl: 'tape.html',
+      controller: 'TapeCtrl'
     });
 
-    $urlRouterProvider.otherwise('/main');
+    $urlRouterProvider.otherwise('/splash');
 })
 .controller('MainCtrl', ['$scope', function ($scope) {
-  
+    
 }])
-.controller('SplashCtrl', ['$scope', function ($scope) {
-  $scope.someData = {
-      labels: [
-      'Apr', 
-      'May', 
-      'Jun'
-    ],
-    datasets: [
-      {
-        data: [1, 7, 15, 19, 31, 40]
-      }
-    ]
-  };
-
-  $scope.someOptions = {
-    scaleShowLabels : false,
-    scaleShowGridLines: false,
-    segementStrokeWidth: 20,
-    segmentStrokeColor: '#000',
-    width:'100%'
-  };
-  // for (var i = 0; i < 50; i++) {
-  //   $scope.chart.datasets[0].data.push(Math.round(Math.random() * 100));
-  // }
-
+.controller('SplashCtrl', ['$scope', '$state', function ($scope, $state) {
+    console.log($state.current)
 }])
 .directive('cmmSplash', [function () {
   return {
@@ -83,15 +65,15 @@ angular.module('cmm', [
 
           canvas = document.getElementById('node-map');
           canvas.width = width;
-          canvas.height = height * 2;
+          canvas.height = height;
           ctx = canvas.getContext('2d');
 
           // create points
           points = [];
-          for(var x = 0; x < width; x = x + width/20) {
-              for(var y = 0; y < height; y = y + height/20) {
-                  var px = x + Math.random()*width/20;
-                  var py = y + Math.random()*height/20;
+          for(var x = 0; x < width; x = x + width/7) {
+              for(var y = 0; y < height; y = y + height/7) {
+                  var px = x + Math.random()*width/7;
+                  var py = y + Math.random()*height/7;
                   var p = {x: px, originX: px, y: py, originY: py };
                   points.push(p);
               }
@@ -102,25 +84,25 @@ angular.module('cmm', [
               var closest = [];
               var p1 = points[i];
               for(var j = 0; j < points.length; j++) {
-                  var p2 = points[j]
-                  if(!(p1 == p2)) {
+                  var p2 = points[j];
+                  if(!(p1 === p2)) {
                       var placed = false;
                       for(var k = 0; k < 5; k++) {
-                          if(!placed) {
-                              if(closest[k] == undefined) {
-                                  closest[k] = p2;
-                                  placed = true;
-                              }
+                        if(!placed) {
+                          if(closest[k] === undefined) {
+                            closest[k] = p2;
+                            placed = true;
                           }
+                        }
                       }
 
                       for(var k = 0; k < 5; k++) {
-                          if(!placed) {
-                              if(getDistance(p1, p2) < getDistance(p1, closest[k])) {
-                                  closest[k] = p2;
-                                  placed = true;
-                              }
-                          }
+                        if(!placed) {
+                            if(getDistance(p1, p2) < getDistance(p1, closest[k])) {
+                              closest[k] = p2;
+                              placed = true;
+                            }
+                        }
                       }
                   }
               }
@@ -129,7 +111,7 @@ angular.module('cmm', [
 
           // assign a circle to each point
           for(var i in points) {
-              var c = new Circle(points[i], 2+Math.random()*2, 'rgba(255,255,255,0.3)');
+              var c = new Circle(points[i], 2+Math.random()*2, 'rgba(255,255,255,.5)');
               points[i].circle = c;
           }
       }
@@ -139,7 +121,7 @@ angular.module('cmm', [
           // if(!('ontouchstart' in window)) {
           //     window.addEventListener('mousemove', mouseMove);
           // }
-          // window.addEventListener('scroll', scrollCheck);
+          window.addEventListener('scroll', scrollCheck);
           window.addEventListener('resize', resize);
       }
 
@@ -182,13 +164,13 @@ angular.module('cmm', [
               ctx.clearRect(0,0,width,height);
               for(var i in points) {
                   // detect points in range
-                  if(Math.abs(getDistance(target, points[i])) < 4000) {
+                  if(Math.abs(getDistance(target, points[i])) < 7000) {
                       points[i].active = 0.3;
                       points[i].circle.active = 0.6;
-                  } else if(Math.abs(getDistance(target, points[i])) < 20000) {
+                  } else if(Math.abs(getDistance(target, points[i])) < 200000) {
                       points[i].active = 0.1;
                       points[i].circle.active = 0.3;
-                  } else if(Math.abs(getDistance(target, points[i])) < 40000) {
+                  } else if(Math.abs(getDistance(target, points[i])) < 400000) {
                       points[i].active = 0.02;
                       points[i].circle.active = 0.1;
                   } else {
@@ -204,42 +186,42 @@ angular.module('cmm', [
       }
 
       function shiftPoint(p) {
-          TweenLite.to(p, 1+1*Math.random(), {x:p.originX-50+Math.random()*100,
-              y: p.originY-50+Math.random()*100, ease:Circ.easeInOut,
-              onComplete: function() {
-                  shiftPoint(p);
-              }});
+        TweenLite.to(p, 1+1*Math.random(), {x:p.originX-50+Math.random()*100,
+            y: p.originY-50+Math.random()*100, ease:Circ.easeInOut,
+            onComplete: function() {
+              shiftPoint(p);
+            }});
       }
 
       // Canvas manipulation
       function drawLines(p) {
-          if(!p.active) return;
-          for(var i in p.closest) {
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p.closest[i].x, p.closest[i].y);
-              ctx.strokeStyle = 'rgba(156,217,249,'+ p.active+')';
-              ctx.stroke();
-          }
+        if(!p.active) return;
+        for(var i in p.closest) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.closest[i].x, p.closest[i].y);
+          ctx.strokeStyle = 'rgba(240,152,25,'+ p.active+')';
+          ctx.stroke();
+        }
       }
 
       function Circle(pos,rad,color) {
-          var _this = this;
+        var _this = this;
 
-          // constructor
-          (function() {
-              _this.pos = pos || null;
-              _this.radius = rad || null;
-              _this.color = color || null;
-          })();
+        // constructor
+        (function() {
+          _this.pos = pos || null;
+          _this.radius = rad || null;
+          _this.color = color || null;
+        })();
 
-          this.draw = function() {
-              if(!_this.active) return;
-              ctx.beginPath();
-              ctx.arc(_this.pos.x, _this.pos.y, _this.radius, 0, 2 * Math.PI, false);
-              ctx.fillStyle = 'rgba(156,217,249,'+ _this.active+')';
-              ctx.fill();
-          };
+        this.draw = function() {
+          if(!_this.active) return;
+          ctx.beginPath();
+          ctx.arc(_this.pos.x, _this.pos.y, _this.radius, 0, 2 * Math.PI, false);
+          ctx.fillStyle = 'rgba(240,152,25,'+ _this.active+')';
+          ctx.fill();
+        };
       }
 
       // Util
@@ -249,16 +231,6 @@ angular.module('cmm', [
     }
   };
 }]);
-  /*
-
-
-
-  (function() {
-
-  })();
-
-
-   */
 angular.module('cmm.widgets', [])
 .directive('widgetCard', [function () {
   return {
