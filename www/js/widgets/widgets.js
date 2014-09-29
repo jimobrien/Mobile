@@ -1,8 +1,8 @@
-angular.module('CMM.widgets', [])
+angular.module('cmm.widgets', [])
 .directive('widgetCard', [function () {
   return {
     restrict: 'E',
-    templateUrl: 'views/card.tpl.html',
+    templateUrl: 'js/widgets/views/card.tpl.html',
     link: function (scope, element, attrs) {
       
     }

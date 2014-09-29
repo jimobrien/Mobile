@@ -8,36 +8,87 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
+    <link href="css/style.css" rel="stylesheet">
+   
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-
-    <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/easing/EasePack.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.13.2/TweenLite.min.js"></script>
+    <script src="lib/Chart.js/Chart.js"></script>
+    <script src="lib/ng-chartjs/dist/angular-chartjs.js"></script>
 
     <!-- your app's js -->
-    <script src="js/app.js"></script>
     <script src="js/widgets/widgets.js"></script>
+    <script src="js/app.js"></script>
+    <style>
+      body {
+        background: #fcfcfc;
+      }
+      a {
+        text-decoration: none;
+      }
+
+      /* splash page */
+      .splash {
+        background: #3B6BD9;
+      }
+      .splash img {
+        position: absolute;
+        margin: 0 50%;
+        width: 200px;
+        left: -100px;
+        top: 15%;
+      }
+      
+      .disclaimer {
+        position: absolute;
+        top: 50%;
+        left: -100px;
+        width: 200px;
+        color: #fff;
+        opacity: 0.85;
+        font-size: 14px;
+        margin: 0 50%;
+      }
+      .disclaimer h4 {
+        color: white;
+      }
+      .disclaimer > div {
+        margin: 0 auto;
+        line-height: 24px;
+      }
+      .continue {
+        position: absolute;
+        bottom: 0;
+      }
+
+      .btn {
+        transition: none;
+        background: transparent;
+        border: 1px solid white;
+        margin: 20px 0;
+        color: white;
+        height: 50px;
+        margin-bottom: 0;
+        font-weight: normal;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 17px;
+        line-height: 1.42857;
+        border-radius: 3px;
+        width: 100%; 
+      }
+
+    </style>
   </head>
-  <body ng-app="CMM">
-    <ion-content>
-      <widget-card></widget-card>
-    </ion-content>
-    <div class="tabs-striped tabs-background-positive tabs-light">
-        <div class="tabs">
-          <a class="tab-item active" href="#">
-            <i class="icon ion-star"></i>
-          </a>
-          <a class="tab-item" href="#">
-            <i class="icon ion-star"></i>
-          </a>
-          <a class="tab-item" href="#">
-            <i class="icon ion-star"></i>
-          </a>
-        </div>
-    </div>
+  <body ng-app="cmm">
+    <ion-nav-view animation="slide-left-right"></ion-nav-view>
   </body>
 </html>
