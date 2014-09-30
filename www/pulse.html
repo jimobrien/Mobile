@@ -1,32 +1,79 @@
-<ion-view>
-<div class="list">
-  <a class="item item-thumbnail-right" href="#">
-    <h2>Volatility</h2>
-    <h1>1.31%</h1>
-    <img src="">  
-  </a>      
-  <a class="item item-thumbnail-right" href="#">
-    <h2>Volume</h2>
-    <h1>1.31%</h1>
-    <img src="">  
-  </a>
-  <a class="item item-thumbnail-right" href="#">
-    <h2>Range</h2>
-    <h1>1.31%</h1>
-    <img src="">  
-  </a>
-</div>
+<ion-content>
+  <div class="item item-divider">
+    Summary Statistics
+  </div>
+  <div class="list">
+    <div class="item">
+      <div class="row">
+        <div class="col">
+          <h4>Volatility</h4>
+          <h2>1.31%</h2>
+        </div>
+        <div class="col">
+          <h4>Num. Trades</h4>
+          <h2>57,998</h2>
+        </div>
+        <div class="col">
+          <h4>Mean Trade</h4>
+          <h2>0.85 BTC</h2>
+        </div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="row">
+        <div class="col">
+          <h4>BTC Vol.</h4>
+          <h2>49,083</h2>
+        </div>
+        <div class="col">
+          <h4>USD Vol.</h4>
+          <h2>$18,484,449</h2>
+        </div>
+        <div class="col">
+          <h4>VWAP</h4>
+          <h2>$376.59</h2>
+        </div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="row">
+        <div class="col">
+          <h4>High</h4>
+          <h2>$388.83</h2>
+        </div>
+        <div class="col">
+          <h4>Low</h4>
+          <h2>$360.75</h2>
+        </div>
+        <div class="col">
+          <h4>Range</h4>
+          <h2>7.46%</h2>
+        </div>
+      </div>
+    </div>
+  
+    <div class="item item-divider">
+      Price
+    </div>  
+    <div class="item"></div>
+    <div class="item item-divider">
+      Price Distribution
+    </div>
+    <div class="item"></div>
+    <div class="item item-divider">
+      Market Stability
+    </div>    
+    <div class="item"></div>
+
+  </div>
+</ion-content>  
 <div class="tabs-striped tabs-background-orange tabs-light">
   <div class="tabs">
     <a class="tab-item active" ui-sref="splash">
       <i class="icon ion-ios7-pulse"></i>
-    </a>
-    <a class="tab-item" ui-sref="charts">
-      <i class="icon ion-ios7-pie-outline"></i>
     </a>
     <a class="tab-item" ui-sref="tape">
       <i class="icon ion-ios7-paper-outline"></i>
     </a>
   </div>
 </div>
-</ion-view>
