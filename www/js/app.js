@@ -5,10 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('cmm', [
   'ionic',
-  'chartjs',
-  'cmm.widgets'
+  'cmm.widgets',
+  'cmm.sockets'
 ])
 .run(function ($ionicPlatform) {
+  // initialize google charts
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -30,7 +32,7 @@ angular.module('cmm', [
     .state('pulse', {
       url: '/pulse',
       templateUrl: 'pulse.html',
-      controller: 'MainCtrl'
+      controller: 'PulseCtrl'
     })
     .state('tape', {
       url: '/tape',
@@ -40,11 +42,122 @@ angular.module('cmm', [
 
     $urlRouterProvider.otherwise('/splash');
 })
-.controller('MainCtrl', ['$scope', function ($scope) {
-    
+.controller('PulseCtrl', ['$scope', function ($scope) {
+  var chart1 = {};
+  chart1.type = "ColumnChart";
+  chart1.cssStyle = "height:150px; width: 100%;";
+  chart1.data = {"cols": [
+      {id: "month", label: "Month", type: "string"},
+      {id: "laptop-id", label: "Laptop", type: "number"},
+      {id: "desktop-id", label: "Desktop", type: "number"},
+      {id: "server-id", label: "Server", type: "number"},
+      {id: "cost-id", label: "Shipping", type: "number"}
+  ], "rows": [
+      {c: [
+          {v: "January"},
+          {v: 19, f: "42 items"},
+          {v: 12, f: "Ony 12 items"},
+          {v: 7, f: "7 servers"},
+          {v: 4}
+      ]},
+      {c: [
+          {v: "February"},
+          {v: 13},
+          {v: 1, f: "1 unit (Out of stock this month)"},
+          {v: 12},
+          {v: 2}
+      ]},
+      {c: [
+          {v: "March"},
+          {v: 24},
+          {v: 0},
+          {v: 11},
+          {v: 6}
+
+      ]}
+  ]};
+
+  chart1.options = {
+      "title": "Sales per month",
+      "isStacked": "true",
+      "fill": 20,
+      "displayExactValues": true,
+      "vAxis": {
+          "title": "Sales unit", "gridlines": {"count": 6}
+      },
+      "hAxis": {
+          "title": "Date"
+      }
+  };
+
+  chart1.formatters = {};
+
+  $scope.chart = chart1;
+}])
+.directive('priceDistChart', ['Sockets', function (Sockets) {
+
+  var priceDistOptions = {
+      hAxis: { title: 'Price' },
+      vAxis: { title: 'Quantity' },
+      theme: 'maximized',
+      isStacked: true
+  };
+
+  return {
+    restrict: 'E',
+    template: '<div></div>',
+    replace: true,
+    link: function (scope, element, attrs) {
+      var rawPriceDistData;
+
+      var processPriceDistData = function(data) {
+        var exchanges = ['Exchanges'];
+        var prices = [];
+        var dataTable = [];
+        data.forEach(function(el) {
+          if (!_.contains(exchanges, el.exchange)) {
+            exchanges.push(el.exchange);
+          }
+          if (!_.contains(prices, el.price)) {
+            prices.push(el.price);
+          }
+        });
+        exchanges.push({role: 'annotation'});
+        dataTable.push(exchanges);
+        prices.forEach(function(price) {
+          var row = [price];
+          for (var i = 1; i < exchanges.length - 1; i++) {
+            row.push(0);
+          }
+          row.push('');
+          dataTable.push(row);
+        });
+
+        data.forEach(function(el) {
+          var x = exchanges.indexOf(el.exchange);
+          var y = prices.indexOf(el.price) + 1;
+          dataTable[y][x] = Number(el.volume.toFixed(2));
+        });
+        return dataTable;
+      };  
+
+      var drawPriceDistChart = function() {
+        var priceDistData = google.visualization.arrayToDataTable(rawPriceDistData);
+        priceDistChart.draw(priceDistData, priceDistOptions);
+      };
+
+      Sockets.priceDist.on('update', function(data) {
+        rawPriceDistData = processPriceDistData(data);
+        priceDistChart = new google
+          .visualization
+          .ColumnChart(element[0]);
+
+          if (rawPriceDistData) { drawPriceDistChart(); }      
+      });
+    }
+  };
 }])
 .controller('SplashCtrl', ['$scope', '$state', function ($scope, $state) {
-    console.log($state.current)
 }])
 .directive('cmmSplash', [function () {
   return {
