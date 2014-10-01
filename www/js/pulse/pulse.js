@@ -1,4 +1,4 @@
-angular.module('cmm.pulse', ['ui.router'])
+angular.module('cmm.pulse', ['ui.router', 'cmm.sockets', 'timeago'])
 .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {  
   $stateProvider
     .state('pulse', {
@@ -8,55 +8,23 @@ angular.module('cmm.pulse', ['ui.router'])
     });
     $urlRouterProvider.otherwise('/splash');
 }])
-.controller('PulseCtrl', ['$scope', function ($scope) {
-  var chart1 = {};
-  chart1.type = "ColumnChart";
-  chart1.cssStyle = "height:150px; width: 100%;";
-  chart1.data = {"cols": [
-      {id: "month", label: "Month", type: "string"},
-      {id: "laptop-id", label: "Laptop", type: "number"},
-      {id: "desktop-id", label: "Desktop", type: "number"},
-      {id: "server-id", label: "Server", type: "number"},
-      {id: "cost-id", label: "Shipping", type: "number"}
-  ], "rows": [
-      {c: [
-          {v: "January"},
-          {v: 19, f: "42 items"},
-          {v: 12, f: "Ony 12 items"},
-          {v: 7, f: "7 servers"},
-          {v: 4}
-      ]},
-      {c: [
-          {v: "February"},
-          {v: 13},
-          {v: 1, f: "1 unit (Out of stock this month)"},
-          {v: 12},
-          {v: 2}
-      ]},
-      {c: [
-          {v: "March"},
-          {v: 24},
-          {v: 0},
-          {v: 11},
-          {v: 6}
+.controller('PulseCtrl', ['$scope', 'Sockets', function ($scope, Sockets) {
+  var summary = Sockets.summary;
 
-      ]}
-  ]};
+  summary.on('update', function(data) {
+    $scope.lastUpdate = (new Date()).toISOString();
 
-  chart1.options = {
-      "title": "Sales per month",
-      "isStacked": "true",
-      "fill": 20,
-      "displayExactValues": true,
-      "vAxis": {
-          "title": "Sales unit", "gridlines": {"count": 6}
-      },
-      "hAxis": {
-          "title": "Date"
-      }
-  };
+    $scope.high = data.high.toFixed(2);
+    $scope.low = data.low.toFixed(2);
+    $scope.range = (data.range * 100);
 
-  chart1.formatters = {};
+    $scope.vwap = data.vwap.toFixed(2);
+    $scope.volumeBTC = Math.round(data.volume);
+    $scope.volumeUSD = Math.round(data.volume * data.vwap);
 
-  $scope.chart = chart1;
+    $scope.volatility = (data.coefficientOfVariation * 100);
+    $scope.numTrades = Math.round(data.numTrades);
+    $scope.avgTrade = (data.volume / data.numTrades);
+
+  });
 }])
